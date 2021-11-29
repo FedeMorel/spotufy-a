@@ -1,28 +1,35 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { TrackModel } from '@core/models/tracks.model';
 import { Observable, of } from 'rxjs';
-import * as dataRaw from '../../../data/tracks.json'
+import { catchError, map } from "rxjs/operators";
+import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
 export class TrackService {
-  dataTracksTrending$ : Observable<TrackModel[]> = of([]);
-  dataTracksRamdom$ : Observable<TrackModel[]> = of([]);
+  private readonly URL = environment.api;
+  constructor(private httpClient: HttpClient) {
+  
+  
+  }
 
-  constructor() {
-    const {data}: any = (dataRaw as any).default;
-    this.dataTracksTrending$ = of (data);
+  getAllTracks$():Observable<any>{
+    return this.httpClient.get(`${this.URL}/tracks`).pipe(
+      map(({data}:any) =>{
+        return data
+      }),
+      catchError((err) =>{
+        console.log('algo pasó');
+        return of([])
+      })
+    )
+  }
 
-    this.dataTracksRamdom$ = new Observable((observer) =>{
-      const tracksExample: TrackModel = {
-        _id:9,
-        name: 'Leve',
-        album: 'Cartel de Santa',
-        url: 'http://',
-        cover: 'https://i.scdn.co/image/ab6761610000e5ebbd172041a059e4b6e46e2cfc',
-        duration: 1
-      }
-      observer.next([tracksExample])
-    })
+  getAllRamdom$():Observable<any>{
+    return this.httpClient.get(`${this.URL}/tracks`).pipe(
+      map(({data}:any) =>{
+        return data.reverse();
+      })
+    )
   }
 }

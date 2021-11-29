@@ -12,22 +12,29 @@ export class TracksPageComponent implements OnInit, OnDestroy {
   tracksTrending: TrackModel[] = [];
   tracksRamdom: TrackModel[] = [];
 
-  listObservers$:Array<Subscription> = [];
   constructor(private tracksService: TrackService) { }
 
   ngOnInit(): void {
-    const observer1$ = this.tracksService.dataTracksTrending$.subscribe(res=>{
-      this.tracksTrending = res;
-    });
+    this.loadDataAllTracks();
+    this.loadDataRamdomTracks();
 
-    const observer2$ = this.tracksService.dataTracksRamdom$.subscribe(res=>{
-      this.tracksRamdom = res;
-    });
-    this.listObservers$ = [observer1$, observer2$];
   }
 
+  loadDataAllTracks():void{
+    this.tracksService.getAllTracks$().subscribe((res:TrackModel[]) =>{
+      this.tracksTrending = res;
+    });
+  }
+
+  loadDataRamdomTracks():void{
+    this.tracksService.getAllRamdom$().subscribe((res:TrackModel[]) =>{
+      this.tracksRamdom = res;
+    });
+  }
+
+
   ngOnDestroy():void{
-    this.listObservers$.forEach( u => u.unsubscribe);
+    
   }
 
 }

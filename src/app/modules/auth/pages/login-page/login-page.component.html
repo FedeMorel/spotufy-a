@@ -19,8 +19,8 @@
             <div class="form-steps">
                 <a class="link" href="">¿Se te ha olvidado la contraseña?</a>
             </div>
-            <div >
-                Ocurrio un error con tu email o password
+            <div class="err" *ngIf="errorSession">
+                Email o Password incorrectos 
             </div>
             <div class="form-action">
                 <button  [disabled]="formLogin.invalid" class="login social-btn">Iniciar sesión</button>

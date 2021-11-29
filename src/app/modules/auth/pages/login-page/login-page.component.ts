@@ -9,6 +9,7 @@ import { AuthService } from '@modules/auth/services/auth.service';
 })
 export class LoginPageComponent implements OnInit {
   formLogin:FormGroup = new FormGroup({});
+  errorSession:boolean = false;
   constructor(private authService:AuthService) { }
 
   ngOnInit(): void {
@@ -20,7 +21,13 @@ export class LoginPageComponent implements OnInit {
 
   sendLogin():void{
     const {email, password} = this.formLogin.value;
-    this.authService.sendCredentials(email, password);
+    this.authService.sendCredentials(email, password).subscribe(resOK =>{
+      this.errorSession = false;
+      console.log('Session iniciada correcta');
+    }, err =>{
+      this.errorSession = true;
+      console.log('Ocurrio un error con tu email o password');
+    });
   }
 
 }
