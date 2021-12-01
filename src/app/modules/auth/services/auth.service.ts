@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -10,7 +11,7 @@ import { environment } from 'src/environments/environment';
 })
 export class AuthService {
   private readonly URL = environment.api
-  constructor(private http: HttpClient, private cookie: CookieService) { 
+  constructor(private http: HttpClient, private cookie: CookieService, private router:Router) { 
 
   }
 
@@ -23,6 +24,7 @@ export class AuthService {
       tap((resOk:any)=>{
         const {tokenSession, data} = resOk;
         this.cookie.set('token', tokenSession, 4 , '/')
+        this.router.navigate(['/','tracks']);
       })
     )
   }
