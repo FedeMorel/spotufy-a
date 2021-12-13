@@ -20,7 +20,7 @@ export class MultimediaService {
 
     this.trackInfo$.subscribe(responseOK =>{
       if(responseOK){
-        this.serAudio(responseOK)
+        this.setAudio(responseOK)
       }
     });
     this.listenAllEvents();
@@ -88,12 +88,18 @@ export class MultimediaService {
 
   }
 
-  public serAudio(track:TrackModel): void{
+  public setAudio(track:TrackModel): void{
     this.audio.src = track.url;
     this.audio.play();
   }
 
   public togglePlayer(): void{
     (this.audio.paused) ? this.audio.play() : this.audio.pause();
+  }
+
+  public seekAudio(percentage: number): void{
+    const {duration} = this.audio;
+    const percentageToSecond = (percentage * duration) / 100;
+    this.audio.currentTime = percentageToSecond;
   }
 }
